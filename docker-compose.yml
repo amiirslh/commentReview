@@ -1,0 +1,36 @@
+services:
+  web:
+    build: .
+    container_name: comment_review_api
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      SECRET_KEY: "${SECRET_KEY:-django-insecure-t3&fmwmv0u)=yzb0^x#qf$$nu!fu12)+a8!b%%1m4379utqyiu8#}"
+      DEBUG: "${DEBUG:-False}"
+      ALLOWED_HOSTS: "${ALLOWED_HOSTS:-*}"
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      AI_MODEL: "${AI_MODEL:-claude-opus-4-8}"
+    volumes:
+      - model_data:/app/swear_persian/models
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: comment_review_redis
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  model_data:
+  redis_data:

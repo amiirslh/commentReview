@@ -1,0 +1,12 @@
+.git
+.gitignore
+.idea
+**/__pycache__
+**/*.pyc
+**/*.pyo
+db.sqlite3
+*.sqlite3
+.env
+swear_persian/models/
+swear_persian/backend/
+README.md
